@@ -8,7 +8,7 @@ import (
 
 func Authorization(token string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		// проверка токена вторизации
+		// проверка токена авторизации
 		return c.Next()
 	}
 }

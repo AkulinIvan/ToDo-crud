@@ -15,10 +15,17 @@ import (
 	customLogger "simple-service/internal/logger"
 	"simple-service/internal/repo"
 	"simple-service/internal/service"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	// Загружаем конфигурацию из переменных окружения
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Printf(".env file was not processed")
+	}
+
 	var cfg config.AppConfig
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal(errors.Wrap(err, "failed to load configuration"))

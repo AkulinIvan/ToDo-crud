@@ -22,7 +22,7 @@ func NewRouters(r *Routers, token string) *fiber.App {
 		AllowMethods:     "GET, POST, PUT, DELETE",
 		AllowHeaders:     "Accept, Authorization, Content-Type, X-CSRF-Token, X-REQUEST-SomeID",
 		ExposeHeaders:    "Link",
-		AllowCredentials: true,
+		AllowCredentials: false,
 		MaxAge:           300,
 	}))
 
@@ -31,6 +31,7 @@ func NewRouters(r *Routers, token string) *fiber.App {
 
 	// Роут для создания задачи
 	apiGroup.Post("/create_task", r.Service.CreateTask)
+	apiGroup.Get("/task/:id", r.Service.GetTask)
 
 	return app
 }
