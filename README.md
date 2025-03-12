@@ -4,7 +4,18 @@ Simple Service – это REST API-сервис, написанный на Go с
 
 Реализовано:
 
-- Создание задач через API
+- Создание задач через API 
+    -   запрос POST /v1/tasks
+    -   {"Title":"ExampleTitle", "Description":"ExampleDescription", "Status":"ExampleStatus"}
+-   Изменение статуса задачи по ID
+    -   запрос PUT /v1/tasks​/:id
+    -   {"Status":"ExampleNewStatus"}
+-   Получение всех задач
+    -   запрос GET /v1/tasks
+-   Получение задачи по ID
+    -   запрос GET /v1/task​/:id
+-   Удаление задачи по ID
+    -   запрос DELETE /v1/task​/:id
 - Валидация входных данных
 - Логирование с использованием `zap`
 - Хранение данных в PostgreSQL
@@ -19,29 +30,20 @@ Simple Service – это REST API-сервис, написанный на Go с
 Перед запуском убедитесь, что у вас установлены:
 
 - Go
-- Docker
 - DataGrip или аналогичное приложение
 - Postman или Insomnia для тестирования API
 
 ### **1.2 Клонирование репозитория**
 
 ```
-git clone https://github.com/yourusername/simple-service.git
-cd simple-service
+git clone https://github.com/yourusername/CRUD-go.git
+cd CRUD-go
 ```
 
 ---
 
-## **2️⃣ Запуск PostgreSQL в Docker**
+## **2️⃣ Запуск PostgreSQL**
 
-### **2.1 Запуск контейнера**
-
-Создайте и запустите контейнер с PostgreSQL:
-
-```
-docker run --name postgres-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=simple_service -p 5432:5432 -d postgres:latest
-
-```
 
 **Параметры:**
 
@@ -69,7 +71,7 @@ POSTGRES_PASSWORD=admin
 POSTGRES_DB=simple_service
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-REST_LISTEN_ADDRESS=:8080
+REST_LISTEN_ADDRESS=:9090
 REST_TOKEN=your_secret_token
 
 ```
@@ -102,7 +104,7 @@ go run cmd/main.go
 
 ```
 
-Сервис будет доступен по адресу `http://localhost:8080`
+Сервис будет доступен по адресу `http://localhost:9090`
 
 ---
 
@@ -113,7 +115,7 @@ go run cmd/main.go
 **Запрос:**
 
 ```
-POST http://localhost:8080/v1/tasks
+POST http://localhost:9090/v1/tasks
 Content-Type: application/json
 Authorization: Bearer your_secret_token
 
@@ -123,6 +125,7 @@ Authorization: Bearer your_secret_token
 {
   "title": "New Feature",
   "description": "Develop new API endpoint"
+  "status": "New"
 }
 
 ```
@@ -141,13 +144,116 @@ Authorization: Bearer your_secret_token
 
 ---
 
-## **6️⃣ Остановка и удаление контейнера**
+### **5.2 Получение задачи по id**
+
+**Запрос:**
 
 ```
-docker stop postgres-db && docker rm postgres-db
+GET http://localhost:9090/v1/tasks/:id
+Content-Type: application/json
+Authorization: Bearer your_secret_token
+
+```
+
+**Ответ:**
+
+```
+{
+  "id": "1"
+  "title": "New Feature",
+  "description": "Develop new API endpoint"
+}
+
+```
+
+### **5.3 Получение списка всех задач**
+
+**Запрос:**
+
+```
+GET http://localhost:8080/v1/tasks/
+Content-Type: application/json
+Authorization: Bearer your_secret_token
+
+```
+
+
+**Ответ:**
+
+```
+{
+    "status": "Status OK",
+    "data": {
+        "1": {
+            "id": 1,
+            "title": "Task number one",
+            "description": "There is description about task number one",
+            "status": "New"
+        },
+        "2": {
+            "id": 2,
+            "title": "Task number two",
+            "description": "There is description about task number two",
+            "status": "New"
+        }
+    }
+}
+
+```
+
+### **5.4 Изменение/обновление задачи по id**
+
+**Запрос:**
+
+```
+PUT http://localhost:8080/v1/tasks/1
+Content-Type: application/json
+Authorization: Bearer your_secret_token
+
+```
+**Body:**
+{
+"id": 1,
+"title": "Task number one exchange",
+"description": "There is description about task number one exchange",
+"status": "Done"
+}
+
+**Ответ:**
+
+```
+{
+  "status": "Status OK",
+    "data": {
+    "task_id": 1
+    }
+}
+
+```
+### **5.5 Удаление задачи по id**
+
+**Запрос:**
+
+```
+DELETE http://localhost:8080/v1/tasks/1
+Content-Type: application/json
+Authorization: Bearer your_secret_token
+
+```
+
+**Ответ:**
+
+```
+{
+    "status": "Status OK",
+    "data": {
+        "task_id": 1
+    }
+}
 
 ```
 ---
+
 
 ## **Дополнительная информация**
 

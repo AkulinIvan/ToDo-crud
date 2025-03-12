@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 
-	"simple-service/internal/api/middleware"
-	"simple-service/internal/service"
+	"github.com/AkulinIvan/CRUD-go/internal/api/middleware"
+	"github.com/AkulinIvan/CRUD-go/internal/service"
 )
 
 // Routers - структура для хранения зависимостей роутов
@@ -27,11 +27,15 @@ func NewRouters(r *Routers, token string) *fiber.App {
 	}))
 
 	// Группа маршрутов с авторизацией
-	apiGroup := app.Group("/v1", middleware.Authorization(token))
+	apiGroup := app.Group("v1", middleware.Authorization(token))
 
 	// Роут для создания задачи
-	apiGroup.Post("/create_task", r.Service.CreateTask)
-	apiGroup.Get("/task/:id", r.Service.GetTask)
+	apiGroup.Post("/tasks", r.Service.CreateTask)
+	apiGroup.Get("/tasks", r.Service.GetTasks)
+	apiGroup.Get("/tasks/:id", r.Service.GetTaskByID)
+	apiGroup.Put("/tasks/:id", r.Service.UpdateTask)
+	apiGroup.Delete("/tasks/:id", r.Service.DeleteTask)
+	
 
 	return app
 }

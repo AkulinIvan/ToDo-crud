@@ -22,12 +22,18 @@ paths:
               required:
                 - title
               properties:
+                id:
+                    type: int
+                    example: 1
                 title:
                   type: string
-                  example: "Implement new feature"
+                  example: "Task number one"
                 description:
                   type: string
-                  example: "Develop a new API endpoint for user management"
+                  example: "There is description about task number one exchange"
+                status: 
+                type: string
+                example: "New"
       responses:
         '201':
           description: Task created successfully

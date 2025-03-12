@@ -7,23 +7,22 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/pkg/errors"
 
-	"simple-service/internal/api"
-	"simple-service/internal/config"
-	customLogger "simple-service/internal/logger"
-	"simple-service/internal/repo"
-	"simple-service/internal/service"
-
-	"github.com/joho/godotenv"
+	"github.com/AkulinIvan/CRUD-go/internal/api"
+	"github.com/AkulinIvan/CRUD-go/internal/config"
+	customLogger "github.com/AkulinIvan/CRUD-go/internal/logger"
+	"github.com/AkulinIvan/CRUD-go/internal/repo"
+	"github.com/AkulinIvan/CRUD-go/internal/service"
 )
 
 func main() {
 	// Загружаем конфигурацию из переменных окружения
-	err := godotenv.Load("../.env")
+	err := godotenv.Load(".env")
 	if err != nil {
-		log.Printf(".env file was not processed")
+		log.Printf(".env file doesn't exist or can't read .env")
 	}
 
 	var cfg config.AppConfig
@@ -37,8 +36,8 @@ func main() {
 		log.Fatal(errors.Wrap(err, "error initializing logger"))
 	}
 
-	// Подключение к PostgreSQL
-	repository, err := repo.NewRepository(context.Background(), cfg.PostgreSQL)
+	// Подключение к данным в памяти
+	repository, err := repo.NewRepository(context.Background())
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to initialize repository"))
 	}

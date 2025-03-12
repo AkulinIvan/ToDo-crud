@@ -11,6 +11,8 @@ const (
 	FieldIncorrect     = "FIELD_INCORRECT"
 	ServiceUnavailable = "SERVICE_UNAVAILABLE"
 	InternalError      = "Service is currently unavailable. Please try again later."
+	StatusOKAnswer     = "The operation was completed successfully"
+	NotFoundTaskError  = "Task not found"
 )
 
 type Response struct {
@@ -24,8 +26,25 @@ type Error struct {
 	Desc string `json:"desc"`
 }
 
+func StatusOK(ctx *fiber.Ctx, desc any) error {
+	return ctx.Status(fiber.StatusOK).JSON(Response{
+		Status: "Status OK",
+		Data:   desc,
+	})
+}
+
 func BadResponseError(ctx *fiber.Ctx, code, desc string) error {
 	return ctx.Status(fiber.StatusBadRequest).JSON(Response{
+		Status: "error",
+		Error: &Error{
+			Code: code,
+			Desc: desc,
+		},
+	})
+}
+
+func NotFound(ctx *fiber.Ctx, code, desc string) error {
+	return ctx.Status(fiber.StatusNotFound).JSON(Response{
 		Status: "error",
 		Error: &Error{
 			Code: code,
