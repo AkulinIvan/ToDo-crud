@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	repo "github.com/AkulinIvan/CRUD-go/internal/repo"
+	repo "github.com/AkulinIvan/ToDo-crud/internal/repo"
 
 	mock "github.com/stretchr/testify/mock"
 )

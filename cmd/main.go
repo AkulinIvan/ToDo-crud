@@ -11,11 +11,11 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/pkg/errors"
 
-	"github.com/AkulinIvan/CRUD-go/internal/api"
-	"github.com/AkulinIvan/CRUD-go/internal/config"
-	customLogger "github.com/AkulinIvan/CRUD-go/internal/logger"
-	"github.com/AkulinIvan/CRUD-go/internal/repo"
-	"github.com/AkulinIvan/CRUD-go/internal/service"
+	"github.com/AkulinIvan/ToDo-crud/internal/api"
+	"github.com/AkulinIvan/ToDo-crud/internal/config"
+	customLogger "github.com/AkulinIvan/ToDo-crud/internal/logger"
+	"github.com/AkulinIvan/ToDo-crud/internal/repo"
+	"github.com/AkulinIvan/ToDo-crud/internal/service"
 )
 
 func main() {
@@ -36,8 +36,8 @@ func main() {
 		log.Fatal(errors.Wrap(err, "error initializing logger"))
 	}
 
-	// Подключение к данным в памяти
-	repository, err := repo.NewRepository(context.Background())
+	// Подключение к PostgreSQL
+	repository, err := repo.NewRepository(context.Background(), cfg.PostgreSQL)
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "failed to initialize repository"))
 	}

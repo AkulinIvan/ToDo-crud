@@ -4,18 +4,18 @@ Simple Service – это REST API-сервис, написанный на Go с
 
 Реализовано:
 
-- Создание задач через API 
-    -   запрос POST /v1/tasks
-    -   {"Title":"ExampleTitle", "Description":"ExampleDescription", "Status":"ExampleStatus"}
--   Изменение статуса задачи по ID
-    -   запрос PUT /v1/tasks​/:id
-    -   {"Status":"ExampleNewStatus"}
--   Получение всех задач
-    -   запрос GET /v1/tasks
--   Получение задачи по ID
-    -   запрос GET /v1/task​/:id
--   Удаление задачи по ID
-    -   запрос DELETE /v1/task​/:id
+- Создание задач через API
+  - запрос POST /v1/tasks
+  - {"Title":"ExampleTitle", "Description":"ExampleDescription", "Status":"ExampleStatus"}
+- Изменение статуса задачи по ID
+  - запрос PUT /v1/tasks​/:id
+  - {"Status":"ExampleNewStatus"}
+- Получение всех задач
+  - запрос GET /v1/tasks
+- Получение задачи по ID
+  - запрос GET /v1/task​/:id
+- Удаление задачи по ID
+  - запрос DELETE /v1/task​/:id
 - Валидация входных данных
 - Логирование с использованием `zap`
 - Хранение данных в PostgreSQL
@@ -36,29 +36,13 @@ Simple Service – это REST API-сервис, написанный на Go с
 ### **1.2 Клонирование репозитория**
 
 ```
-git clone https://github.com/yourusername/CRUD-go.git
-cd CRUD-go
+git clone https://github.com/yourusername/ToDo-crud.git
+cd ToDo-crud
 ```
 
 ---
 
-## **2️⃣ Запуск PostgreSQL**
-
-
-**Параметры:**
-
-- `POSTGRES_USER=admin` – имя пользователя БД
-- `POSTGRES_PASSWORD=admin` – пароль
-- `POSTGRES_DB=simple_service` – название базы
-- `-p 5432:5432` – проброс порта
-
-### **2.2 Проверка работы БД**
-
-Подключитесь к PostgreSQL с помощью программы (DataGrip) и создайте там таблицу
-
----
-
-## **3️⃣ Настройка проекта**
+## **2 Настройка проекта**
 
 ### **3.1 Создание `.env` файла**
 
@@ -71,13 +55,14 @@ POSTGRES_PASSWORD=admin
 POSTGRES_DB=simple_service
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-REST_LISTEN_ADDRESS=:9090
+REST_LISTEN_ADDRESS=:8080
 REST_TOKEN=your_secret_token
 
 ```
 
 Также установите плагин в вашу IDLE.
-Я использую ее: https://github.com/Ashald/EnvFile
+Я использую ее: <https://github.com/Ashald/EnvFile>
+
 ### **3.2 Применение миграций**
 
 Создайте таблицу `tasks` в базе данных:
@@ -93,6 +78,7 @@ CREATE TABLE tasks (
 );
 
 ```
+
 ---
 
 ## **4️⃣ Запуск сервиса**
@@ -104,7 +90,7 @@ go run cmd/main.go
 
 ```
 
-Сервис будет доступен по адресу `http://localhost:9090`
+Сервис будет доступен по адресу `http://localhost:8080`
 
 ---
 
@@ -115,7 +101,7 @@ go run cmd/main.go
 **Запрос:**
 
 ```
-POST http://localhost:9090/v1/tasks
+POST http://localhost:8080/v1/tasks
 Content-Type: application/json
 Authorization: Bearer your_secret_token
 
@@ -149,7 +135,7 @@ Authorization: Bearer your_secret_token
 **Запрос:**
 
 ```
-GET http://localhost:9090/v1/tasks/:id
+GET http://localhost:8080/v1/tasks/1
 Content-Type: application/json
 Authorization: Bearer your_secret_token
 
@@ -176,7 +162,6 @@ Content-Type: application/json
 Authorization: Bearer your_secret_token
 
 ```
-
 
 **Ответ:**
 
@@ -211,13 +196,17 @@ Content-Type: application/json
 Authorization: Bearer your_secret_token
 
 ```
+
 **Body:**
+
+```
 {
 "id": 1,
 "title": "Task number one exchange",
 "description": "There is description about task number one exchange",
 "status": "Done"
 }
+```
 
 **Ответ:**
 
@@ -230,6 +219,7 @@ Authorization: Bearer your_secret_token
 }
 
 ```
+
 ### **5.5 Удаление задачи по id**
 
 **Запрос:**
@@ -252,8 +242,8 @@ Authorization: Bearer your_secret_token
 }
 
 ```
----
 
+---
 
 ## **Дополнительная информация**
 

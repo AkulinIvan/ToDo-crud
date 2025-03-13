@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
-	"github.com/AkulinIvan/CRUD-go/internal/dto"
-	"github.com/AkulinIvan/CRUD-go/internal/repo"
-	"github.com/AkulinIvan/CRUD-go/internal/repo/mocks"
+	"github.com/AkulinIvan/ToDo-crud/internal/dto"
+	"github.com/AkulinIvan/ToDo-crud/internal/repo"
+	"github.com/AkulinIvan/ToDo-crud/internal/repo/mocks"
 )
 
 // TestCreateTask - тестирование метода CreateTask
