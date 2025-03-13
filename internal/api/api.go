@@ -25,11 +25,11 @@ func NewRouters(r *Routers, token string) *fiber.App {
 	}))
 	apiGroup := app.Group("/v1/", middleware.Authorization(token))
 
-	apiGroup.Post("tasks/", r.Service.CreateTask)
+	apiGroup.Post("task/", r.Service.CreateTask)
 	apiGroup.Get("tasks/", r.Service.GetTasks)
-	apiGroup.Get("tasks/:id", r.Service.GetTask)
-	apiGroup.Put("tasks/:id", r.Service.UpdateTask)
-	apiGroup.Delete("tasks/:id", r.Service.DeleteTask)
+	apiGroup.Get("task/:id", r.Service.GetTask)
+	apiGroup.Put("task/:id", r.Service.UpdateTask)
+	apiGroup.Delete("task/:id", r.Service.DeleteTask)
 	
 	return app
 }
