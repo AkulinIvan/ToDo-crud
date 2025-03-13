@@ -17,11 +17,11 @@ import (
 
 // SQL-запрос на вставку задачи
 const (
-	insertTaskQuery  = `INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING id;`
-	getTaskIdQuery = `Select * FROM tasks WHERE id=$1;`
-	setStatusQuery   = `UPDATE tasks SET status = $1 where id = $2;`
-	deleteTaskQuery  = `DELETE FROM tasks where id = $1`
-	getTasksQuery    = `SELECT * FROM tasks;`
+	insertTaskQuery = `INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING id;`
+	getTaskQuery    = `Select * FROM tasks WHERE id=$1;`
+	setStatusQuery  = `UPDATE tasks SET status = $1 where id = $2;`
+	deleteTaskQuery = `DELETE FROM tasks where id = $1`
+	getTasksQuery   = `SELECT * FROM tasks;`
 )
 
 type repository struct {
@@ -30,8 +30,8 @@ type repository struct {
 
 // Repository - интерфейс с методом создания задачи
 type Repository interface {
-	CreateTask(ctx context.Context, task Task) (int, error)    // Создание задачи
-	GetTaskId(ctx context.Context, id uint32) (*Task, error) // Получение задачи по id
+	CreateTask(ctx context.Context, task Task) (int, error) // Создание задачи
+	GetTask(ctx context.Context, id uint32) (*Task, error)  // Получение задачи по id
 	UpdateTask(ctx context.Context, id uint32, currentStatus string) error
 	DeleteTask(ctx context.Context, id uint32) error
 	GetTasks(ctx context.Context) (map[string]Task, error)
@@ -74,6 +74,7 @@ func NewRepository(ctx context.Context, cfg config.PostgreSQL) (Repository, erro
 	}
 
 	return &repository{pool}, nil
+
 }
 
 // CreateTask - вставка новой задачи в таблицу tasks
@@ -86,10 +87,10 @@ func (r *repository) CreateTask(ctx context.Context, task Task) (int, error) {
 	return id, nil
 }
 
-func (r *repository) GetTaskId(ctx context.Context, id uint32) (*Task, error) {
+func (r *repository) GetTask(ctx context.Context, id uint32) (*Task, error) {
 	task := Task{}
 
-	if err := r.pool.QueryRow(ctx, getTaskIdQuery, id).Scan(nil, &task.Title, &task.Description, &task.Status); err != nil {
+	if err := r.pool.QueryRow(ctx, getTaskQuery, id).Scan(nil, &task.Title, &task.Description, &task.Status); err != nil {
 		return &task, errors.New("failed to select task")
 	}
 
@@ -120,7 +121,7 @@ func (r *repository) GetTasks(ctx context.Context) (map[string]Task, error) {
 
 	rows, err := r.pool.Query(ctx, getTasksQuery)
 	if err != nil {
-		return tasks, errors.Wrap(err, "failed to select tasks")
+		return tasks, errors.Wrap(err, "have not tasks")
 	}
 	defer rows.Close()
 

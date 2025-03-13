@@ -23,13 +23,13 @@ func NewRouters(r *Routers, token string) *fiber.App {
 		AllowCredentials: false,
 		MaxAge:           300,
 	}))
-	apiGroup := app.Group("v1", middleware.Authorization(token))
+	apiGroup := app.Group("/v1/", middleware.Authorization(token))
 
-	apiGroup.Post("/tasks", r.Service.CreateTask)
-	apiGroup.Get("/tasks", r.Service.GetTasks)
-	apiGroup.Get("/tasks/:id", r.Service.GetTaskId)
-	apiGroup.Put("/tasks/:id", r.Service.UpdateTask)
-	apiGroup.Delete("/tasks/:id", r.Service.DeleteTask)
+	apiGroup.Post("tasks/", r.Service.CreateTask)
+	apiGroup.Get("tasks/", r.Service.GetTasks)
+	apiGroup.Get("tasks/:id", r.Service.GetTask)
+	apiGroup.Put("tasks/:id", r.Service.UpdateTask)
+	apiGroup.Delete("tasks/:id", r.Service.DeleteTask)
 	
 	return app
 }

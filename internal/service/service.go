@@ -2,11 +2,10 @@ package service
 
 import (
 	"encoding/json"
-	"strconv"
-
 	"github.com/AkulinIvan/ToDo-crud/internal/dto"
 	"github.com/AkulinIvan/ToDo-crud/internal/repo"
 	"github.com/AkulinIvan/ToDo-crud/pkg/validator"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
@@ -17,7 +16,7 @@ import (
 // Service - интерфейс для бизнес-логики
 type Service interface {
 	CreateTask(ctx *fiber.Ctx) error
-	GetTaskId(ctx *fiber.Ctx) error
+	GetTask(ctx *fiber.Ctx) error
 	DeleteTask(ctx *fiber.Ctx) error
 	UpdateTask(ctx *fiber.Ctx) error
 	GetTasks(ctx *fiber.Ctx) error
@@ -55,29 +54,28 @@ func (s *service) CreateTask(ctx *fiber.Ctx) error {
 	task := repo.Task{
 		Title:       req.Title,
 		Description: req.Description,
-		Status:      repo.StatusType(req.Status),
 	}
-	taskId, err := s.repo.CreateTask(ctx.Context(), task)
+	taskID, err := s.repo.CreateTask(ctx.Context(), task)
 	if err != nil {
 		s.log.Error("Failed to insert task", zap.Error(err))
 		return dto.InternalServerError(ctx)
 	}
 
-	response := dto.StatusOK(ctx, map[string]int{"task_id": taskId})
+	response := dto.StatusOK(ctx, map[string]int{"task_id": taskID})
 
 	return response
 }
 
-func (s *service) GetTaskId(ctx *fiber.Ctx) error {
+func (s *service) GetTask(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
-		s.log.Error("Failed to parse id from request", zap.Error(err))
+		s.log.Error("Failed id of task", zap.Error(err))
 		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")
 	}
-
-	task, err := s.repo.GetTaskId(ctx.Context(), uint32(id))
+	
+	task, err := s.repo.GetTask(ctx.Context(), uint32(id))
 	if err != nil {
-		s.log.Error("Failed to selected from DB Table", zap.Error(err))
+		s.log.Error("Have not task in DB", zap.Error(err))
 		return dto.InternalServerError(ctx)
 	}
 
@@ -89,7 +87,7 @@ func (s *service) GetTaskId(ctx *fiber.Ctx) error {
 func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
-		s.log.Error("Failed to parse id from request", zap.Error(err))
+		s.log.Error("Have not task in DB", zap.Error(err))
 		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")
 	}
 
@@ -110,8 +108,8 @@ func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 
 	err = s.repo.UpdateTask(ctx.Context(), uint32(id), status)
 	if err != nil {
-		s.log.Error("Failed to update table", zap.Error(err))
-		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Failed to update table")
+		s.log.Error("Failed to update task", zap.Error(err))
+		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Failed to update task")
 	}
 
 	response := dto.StatusOK(ctx, "Success updating")
@@ -122,14 +120,14 @@ func (s *service) UpdateTask(ctx *fiber.Ctx) error {
 func (s *service) DeleteTask(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
-		s.log.Error("Failed to parse id from request", zap.Error(err))
+		s.log.Error("Have not id in BD", zap.Error(err))
 		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Invalid request body")
 	}
 
 	err = s.repo.DeleteTask(ctx.Context(), uint32(id))
 	if err != nil {
-		s.log.Error("Failed to delete from table", zap.Error(err))
-		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Failed to delete from table")
+		s.log.Error("Failed to delete of task", zap.Error(err))
+		return dto.BadResponseError(ctx, dto.FieldBadFormat, "Failed to delete of task")
 	}
 
 	response := dto.StatusOK(ctx, "Delete was successful")
